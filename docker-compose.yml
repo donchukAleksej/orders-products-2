@@ -1,0 +1,22 @@
+services:
+  api:
+    build: ./server
+    ports:
+      - "3001:3001"
+    environment:
+      JWT_SECRET: "change-me-in-production"
+      ADMIN_USER: "admin"
+      ADMIN_PASSWORD: "admin123"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./client
+      args:
+        # адреса API з точки зору браузера; на VDS замініть на свій домен/IP
+        NEXT_PUBLIC_API_URL: "http://localhost:3001"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
